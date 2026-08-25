@@ -23,6 +23,8 @@ export interface IUser {
   role: UserRole;
   profile: IUserProfile;
   refreshToken?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export interface IUserMethods {
   comparePassword(passwordfromLogin: string): Promise<boolean>;
