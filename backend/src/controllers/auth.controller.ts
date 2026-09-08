@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
-import { registerUser, loginUser } from "../services/auth.service.js";
+import { registerUser, loginUser,refreshAccessToken } from "../services/auth.service.js";
+import { AppError } from "../utils/AppError.js";
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   const { user, accessToken, refreshToken } = await registerUser(req.body);
@@ -34,5 +35,31 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     message: "Login successful",
     accessToken,
     user,
+  });
+};
+export const refresh = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    throw new AppError("Refresh token is required", 401);
+  }
+
+  const { accessToken, refreshToken: newRefreshToken } =
+    await refreshAccessToken(refreshToken);
+
+  res.cookie("refreshToken", newRefreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Token refreshed successfully",
+    accessToken,
   });
 };
