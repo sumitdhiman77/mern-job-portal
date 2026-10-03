@@ -18,6 +18,8 @@ const validate =
       });
       return;
     }
+
     next();
   };
+
 export default validate;

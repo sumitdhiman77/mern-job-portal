@@ -1,6 +1,11 @@
 import type { Request, Response } from "express";
-import { registerUser, loginUser,refreshAccessToken } from "../services/auth.service.js";
+import {
+  registerUser,
+  loginUser,
+  refreshAccessToken,
+} from "../services/auth.service.js";
 import { AppError } from "../utils/AppError.js";
+import User from "../models/user.model.js";
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   const { user, accessToken, refreshToken } = await registerUser(req.body);
@@ -37,10 +42,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     user,
   });
 };
-export const refresh = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
+export const refresh = async (req: Request, res: Response): Promise<void> => {
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
@@ -61,5 +63,26 @@ export const refresh = async (
     success: true,
     message: "Token refreshed successfully",
     accessToken,
+  });
+};
+export const logout = async (req: Request, res: Response): Promise<void> => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (refreshToken) {
+    await User.findOneAndUpdate(
+      { refreshToken },
+      { $unset: { refreshToken: 1 } },
+    );
+  }
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "strict",
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Logout successful",
   });
 };

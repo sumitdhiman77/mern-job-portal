@@ -1,4 +1,4 @@
-import jwt  from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import type { IUser } from "../interfaces/user.interface.js";
 import { AppError } from "../utils/AppError.js";
@@ -91,3 +91,4 @@ export const refreshAccessToken = async (refreshToken: string) => {
     refreshToken: newRefreshToken,
   };
 };
+
