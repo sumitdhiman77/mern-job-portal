@@ -30,6 +30,13 @@ const resumeSchema = new Schema<IResume>(
       type: String,
       default: "",
     },
+    publicId: {
+      type: String,
+    },
+    resourceType: {
+      type: String,
+      enum: ["image", "raw"],
+    },
   },
   { _id: false },
 );

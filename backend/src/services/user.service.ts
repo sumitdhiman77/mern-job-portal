@@ -92,9 +92,7 @@ export const uploadResume = async (
       (error, result) => {
         if (error) {
           console.error("Cloudinary resume upload failed:", error);
-          reject(
-            new AppError("Failed to upload resume to Cloudinary", 502),
-          );
+          reject(new AppError("Failed to upload resume to Cloudinary", 502));
           return;
         }
 
@@ -118,6 +116,8 @@ export const uploadResume = async (
   user.profile.resume = {
     url: result.secure_url,
     originalName: file.originalname,
+    publicId: result.public_id,
+    resourceType: isPdf ? "image" : "raw",
   };
 
   try {
@@ -137,30 +137,38 @@ export const uploadResume = async (
 
   // Delete the previous Cloudinary asset only after the new resume is saved.
   if (previousResume?.url) {
-    try {
+  try {
+    let previousPublicId = previousResume.publicId;
+    let previousResourceType = previousResume.resourceType;
+
+    // Fallback for resumes uploaded before metadata was stored.
+    if (!previousPublicId) {
       const previousUrl = new URL(previousResume.url);
       const match = previousUrl.pathname.match(
         /\/(?:image|raw)\/upload\/(?:v\d+\/)?(.+)$/,
       );
 
       if (match?.[1]) {
-        const previousPublicId = decodeURIComponent(match[1]).replace(
+        previousPublicId = decodeURIComponent(match[1]).replace(
           /\.[^/.]+$/,
           "",
         );
 
-        const resourceType = previousUrl.pathname.includes("/raw/upload/")
+        previousResourceType = previousUrl.pathname.includes("/raw/upload/")
           ? "raw"
           : "image";
-
-        await cloudinary.uploader.destroy(previousPublicId, {
-          resource_type: resourceType,
-        });
       }
-    } catch (cleanupError) {
-      console.error("Previous resume cleanup failed:", cleanupError);
     }
+
+    if (previousPublicId && previousResourceType) {
+      await cloudinary.uploader.destroy(previousPublicId, {
+        resource_type: previousResourceType,
+      });
+    }
+  } catch (cleanupError) {
+    console.error("Previous resume cleanup failed:", cleanupError);
   }
+}
 
   return user.profile.resume;
 };

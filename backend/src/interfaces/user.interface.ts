@@ -3,7 +3,10 @@ import type { Model } from "mongoose";
 export interface IResume {
   url: string;
   originalName: string;
+  publicId?: string;
+  resourceType?: "image" | "raw";
 }
+
 export const  USER_ROLES = ["job seeker", "employer"] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 
