@@ -4,6 +4,7 @@ import {
   getJobsController,
   getJobByIdController,
   updateJobController,
+  deleteJobController
 } from "../controllers/job.controller.js";
 import { authenticate } from "../middleware/auth.middleware.js";
 import { authorize } from "../middleware/role.middleware.js";
@@ -39,6 +40,14 @@ router.patch(
   authorize("employer"),
   validate(updateJobSchema),
   updateJobController,
+);
+
+router.delete(
+  "/:id",
+  authenticate,
+  authorize("employer"),
+  validate(getJobByIdSchema),
+  deleteJobController,
 );
 
 export default router;

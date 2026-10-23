@@ -1,7 +1,14 @@
 import type { Request, Response } from "express";
-import { createJob, getJobs, getJobById,updateJob } from "../services/job.service.js";
+import {
+  createJob,
+  getJobs,
+  getJobById,
+  updateJob,
+  deleteJob,
+} from "../services/job.service.js";
 import { AppError } from "../utils/AppError.js";
 import { getJobsQuerySchema } from "../validators/job.validator.js";
+import { success } from "zod";
 
 export const createJobController = async (
   req: Request,
@@ -37,6 +44,7 @@ export const getJobByIdController = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  
   const job = await getJobById(req.params.id as string);
 
   res.status(200).json({
@@ -53,15 +61,27 @@ export const updateJobController = async (
     throw new AppError("Authentication required", 401);
   }
 
-  const job = await updateJob(
-    req.params.id as string,
-    req.user._id,
-    req.body,
-  );
+  const job = await updateJob(req.params.id as string, req.user._id, req.body);
 
   res.status(200).json({
     success: true,
     message: "Job updated successfully",
     job,
+  });
+};
+
+export const deleteJobController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  if (!req.user) {
+    throw new AppError("Authentication required", 401);
+  }
+
+  await deleteJob(req.params.id as string, req.user._id);
+
+  res.status(200).json({
+    success: true,
+    message: "Job deleted successfully",
   });
 };

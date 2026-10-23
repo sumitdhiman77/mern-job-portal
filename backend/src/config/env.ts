@@ -11,6 +11,9 @@ const requiredEnvVars = [
   "ACCESS_TOKEN_EXPIRY",
   "REFRESH_TOKEN_SECRET",
   "REFRESH_TOKEN_EXPIRY",
+  "CLOUDINARY_CLOUD_NAME",
+  "CLOUDINARY_API_KEY",
+  "CLOUDINARY_API_SECRET",
 ] as const;
 
 for (const envVar of requiredEnvVars) {
@@ -19,7 +22,14 @@ for (const envVar of requiredEnvVars) {
   }
 }
 
-export const PORT = Number(process.env.PORT!);
+const port = Number(process.env.Port);
+if (!Number.isInteger(port) || port < 1 || port > 65535) {
+  throw new Error("PORT must be a valid port number");
+}
+if (!["development", "production", "test"].includes(process.env.NODE_ENV!)) {
+  throw new Error("NODE_ENV must be development, production, or test");
+}
+export const PORT = port;
 export const NODE_ENV = process.env.NODE_ENV!;
 export const MONGODB_URI = process.env.MONGODB_URI!;
 export const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET!;
@@ -29,3 +39,8 @@ export const ACCESS_TOKEN_EXPIRY: NonNullable<SignOptions["expiresIn"]> =
 export const REFRESH_TOKEN_EXPIRY: NonNullable<SignOptions["expiresIn"]> =
   process.env.REFRESH_TOKEN_EXPIRY! as NonNullable<SignOptions["expiresIn"]>;
 export const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET!;
+
+export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME!;
+export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY!;
+export const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET!;
+
