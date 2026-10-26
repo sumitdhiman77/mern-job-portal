@@ -1,3 +1,7 @@
+import dns from "node:dns";
+
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
 import app from "./app.js";
 import connectDB from "./config/db.js";
 import { PORT } from "./config/env.js";
@@ -6,7 +10,7 @@ const startServer = async () => {
   try {
     await connectDB();
 
-    app.listen(PORT,"0.0.0.0", () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
   } catch (error) {
@@ -14,4 +18,5 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
 startServer();
