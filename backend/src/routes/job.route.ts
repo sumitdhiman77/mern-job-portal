@@ -26,7 +26,7 @@ router.post(
   createJobController,
 );
 
-router.get("/", authenticate, validate(getJobsSchema), getJobsController);
+router.get("/", validate(getJobsSchema), getJobsController);
 
 router.get(
   "/:id",
