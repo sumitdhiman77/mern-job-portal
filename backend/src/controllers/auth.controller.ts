@@ -55,7 +55,7 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
   const { accessToken, refreshToken: newRefreshToken } =
     await refreshAccessToken(refreshToken);
 
-  res.cookie("refreshToken", refreshToken, refreshCookieOptions);
+  res.cookie("refreshToken", newRefreshToken, refreshCookieOptions);
 
   res.status(200).json({
     success: true,
@@ -73,7 +73,7 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
     );
   }
 
- res.clearCookie("refreshToken", clearRefreshCookieOptions);
+  res.clearCookie("refreshToken", clearRefreshCookieOptions);
 
   res.status(200).json({
     success: true,
