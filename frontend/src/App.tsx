@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
-import AuthForm from "./components/AuthForm";
-
+import AuthPage from "./features/auth/AuthPage";
+import type { AuthResponse } from "./features/auth/auth.api";
 type AuthUser = {
   _id: string;
   name: string;
@@ -52,9 +52,11 @@ function App() {
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [authMode, setAuthMode] = useState<"login" | "register" | null>(null);
+  const [currentUser, setCurrentUser] = useState<AuthResponse["user"] | null>(
+    null,
+  );
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
-  const [showAuth, setShowAuth] = useState(false);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -117,6 +119,20 @@ function App() {
     });
   }, [jobs, search, location]);
 
+  if (authMode) {
+    return (
+      <AuthPage
+        initialMode={authMode}
+        onCancel={() => setAuthMode(null)}
+        onAuthenticated={(result) => {
+          setCurrentUser(result.user);
+          setAccessToken(result.accessToken);
+          setAuthMode(null);
+        }}
+      />
+    );
+  }
+
   return (
     <main className="app">
       <nav className="navbar">
@@ -127,10 +143,12 @@ function App() {
         <div className="nav-links">
           <a href="#jobs">Find Jobs</a>
           <a href="#employers">For Employers</a>
-          <a href="#login">Login</a>
-          <a className="nav-button" href="#register">
+          <button type="button" onClick={() => setAuthMode("login")}>
+            Login
+          </button>
+          <button type="button" onClick={() => setAuthMode("register")}>
             Get Started
-          </a>
+          </button>
         </div>
       </nav>
 
