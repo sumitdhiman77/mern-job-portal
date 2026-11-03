@@ -10,15 +10,17 @@ import User from "../models/user.model.js";
 
 const refreshCookieOptions = {
   httpOnly: true,
-  secure: NODE_ENV === "production",
-  sameSite: "strict" as const,
+  secure: true,
+  sameSite: "none" as const,
+  path: "/",
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
 const clearRefreshCookieOptions = {
   httpOnly: true,
-  secure: NODE_ENV === "production",
-  sameSite: "strict" as const,
+  secure: true,
+  sameSite: "none" as const,
+  path: "/",
 };
 export const register = async (req: Request, res: Response): Promise<void> => {
   const { user, accessToken, refreshToken } = await registerUser(req.body);
