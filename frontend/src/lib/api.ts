@@ -13,18 +13,26 @@ export class ApiError extends Error {
 export async function apiRequest<T>(
   path: string,
   options: RequestInit = {},
+  accessToken?: string | null,
 ): Promise<T> {
   if (!API_BASE_URL) {
     throw new Error("VITE_API_BASE_URL is not configured.");
   }
 
+  const headers = new Headers(options.headers);
+
+  if (options.body && !(options.body instanceof FormData)) {
+    headers.set("Content-Type", "application/json");
+  }
+
+  if (accessToken) {
+    headers.set("Authorization", `Bearer ${accessToken}`);
+  }
+
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
     credentials: "include",
-    headers: {
-      ...(options.body ? { "Content-Type": "application/json" } : {}),
-      ...options.headers,
-    },
+    headers,
   });
 
   const data: unknown = await response.json().catch(() => null);

@@ -4,7 +4,8 @@ import {
   getJobsController,
   getJobByIdController,
   updateJobController,
-  deleteJobController
+  deleteJobController,
+  getMyJobsController
 } from "../controllers/job.controller.js";
 import { authenticate } from "../middleware/auth.middleware.js";
 import { authorize } from "../middleware/role.middleware.js";
@@ -14,6 +15,7 @@ import {
   getJobsSchema,
   getJobByIdSchema,
   updateJobSchema,
+  getMyJobsSchema
 } from "../validators/job.validator.js";
 
 const router = Router();
@@ -27,6 +29,14 @@ router.post(
 );
 
 router.get("/", validate(getJobsSchema), getJobsController);
+
+router.get(
+  "/my",
+  authenticate,
+  authorize("employer"),
+  // validate(getMyJobsSchema),
+  getMyJobsController,
+);
 
 router.get(
   "/:id",

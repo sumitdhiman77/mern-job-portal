@@ -23,6 +23,36 @@ export const createJob = async (employerId: string, jobData: CreateJobData) => {
   return job;
 };
 
+export const getMyJobs = async (
+  employerId: string,
+  page: number,
+  limit: number,
+) => {
+  const skip = (page - 1) * limit;
+
+  const filter = { employerId };
+
+  const [jobs, totalJobs] = await Promise.all([
+    Job.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+
+    Job.countDocuments(filter),
+  ]);
+
+  return {
+    jobs,
+    pagination: {
+      currentPage: page,
+      limit,
+      totalJobs,
+      totalPages: Math.ceil(totalJobs / limit),
+    },
+  };
+};
+
 export const getJobs = async ({
   page,
   limit,
@@ -128,6 +158,5 @@ export const deleteJob = async (jobId: string, employerId: string) => {
   if (applicationCount > 0) {
     throw new AppError("Cannot delete a job that has applications", 409);
   }
-
-  await Job.deleteOne();
+await Job.deleteOne({ _id: job._id });
 };

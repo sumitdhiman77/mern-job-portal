@@ -1,14 +1,10 @@
+import ApplyForm from "./features/applications/ApplyForm";
+import MyApplicationsPage from "./features/applications/MyApplicationsPage";
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import AuthPage from "./features/auth/AuthPage";
-import type { AuthResponse } from "./features/auth/auth.api";
-type AuthUser = {
-  _id: string;
-  name: string;
-  email: string;
-  role: "job seeker" | "employer";
-};
-
+import { useAuth } from "./features/auth/AuthContext";
+import ProfilePage from "./features/profile/ProfilePage";
 type Job = {
   _id: string;
   title: string;
@@ -30,7 +26,9 @@ type JobsResponse = {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function formatSalary(salary?: Job["salary"]): string {
-  if (!salary?.min && !salary?.max) return "Salary not specified";
+  if (salary?.min == null && salary?.max == null) {
+    return "Salary not specified";
+  }
 
   const formatAmount = (amount: number) =>
     new Intl.NumberFormat("en-IN", {
@@ -47,16 +45,19 @@ function formatSalary(salary?: Job["salary"]): string {
 }
 
 function App() {
+  const { user, accessToken, login, isAuthLoading, logout } = useAuth();
+  const [currentPage, setCurrentPage] = useState<
+    "home" | "profile" | "applications" | "my-jobs" | "applicants"
+  >("home");
+  const [authMode, setAuthMode] = useState<"login" | "register" | null>(null);
+
   const [jobs, setJobs] = useState<Job[]>([]);
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [authMode, setAuthMode] = useState<"login" | "register" | null>(null);
-  const [currentUser, setCurrentUser] = useState<AuthResponse["user"] | null>(
-    null,
-  );
-  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [applyMessage, setApplyMessage] = useState("");
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -118,17 +119,39 @@ function App() {
       return matchesSearch && matchesLocation;
     });
   }, [jobs, search, location]);
-
+  if (isAuthLoading) {
+    return <p>Restoring your session...</p>;
+  }
   if (authMode) {
     return (
       <AuthPage
         initialMode={authMode}
         onCancel={() => setAuthMode(null)}
         onAuthenticated={(result) => {
-          setCurrentUser(result.user);
-          setAccessToken(result.accessToken);
+          login(result);
           setAuthMode(null);
         }}
+      />
+    );
+  }
+
+  if (
+    currentPage === "applications" &&
+    user?.role === "job seeker" &&
+    accessToken
+  ) {
+    return (
+      <MyApplicationsPage
+        accessToken={accessToken}
+        onBack={() => setCurrentPage("home")}
+      />
+    );
+  }
+  if (currentPage === "profile" && user && accessToken) {
+    return (
+      <ProfilePage
+        accessToken={accessToken}
+        onBack={() => setCurrentPage("home")}
       />
     );
   }
@@ -143,12 +166,30 @@ function App() {
         <div className="nav-links">
           <a href="#jobs">Find Jobs</a>
           <a href="#employers">For Employers</a>
-          <button type="button" onClick={() => setAuthMode("login")}>
-            Login
-          </button>
-          <button type="button" onClick={() => setAuthMode("register")}>
-            Get Started
-          </button>
+
+          {isAuthLoading ? (
+            <span>Restoring session...</span>
+          ) : user ? (
+            <>
+              <span>{user.name}</span>
+              <button onClick={() => setCurrentPage("profile")}>
+                My Profile
+              </button>
+              {user.role === "job seeker" && (
+                <button onClick={() => setCurrentPage("applications")}>
+                  My Applications
+                </button>
+              )}
+              <button onClick={logout}>Logout</button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => setAuthMode("login")}>Login</button>
+              <button onClick={() => setAuthMode("register")}>
+                Get Started
+              </button>
+            </>
+          )}
         </div>
       </nav>
 
@@ -170,6 +211,7 @@ function App() {
           className="search-form"
           onSubmit={(event) => {
             event.preventDefault();
+
             document.getElementById("jobs")?.scrollIntoView({
               behavior: "smooth",
             });
@@ -199,6 +241,24 @@ function App() {
             <p className="eyebrow">EXPLORE OPPORTUNITIES</p>
             <h2>Find your next role</h2>
           </div>
+          {applyMessage && (
+            <p role="status" className="status-message">
+              {applyMessage}
+            </p>
+          )}
+
+          {selectedJob && accessToken && (
+            <ApplyForm
+              jobId={selectedJob._id}
+              accessToken={accessToken}
+              onSuccess={(message) => {
+                setApplyMessage(message);
+                setSelectedJob(null);
+              }}
+              onCancel={() => setSelectedJob(null)}
+            />
+          )}
+
           <span>
             {loading ? "Loading jobs…" : `${filteredJobs.length} jobs found`}
           </span>
@@ -210,6 +270,7 @@ function App() {
           <div className="status-message error-state">
             <h3>We couldn't load the jobs.</h3>
             <p>{error}</p>
+
             <button type="button" onClick={() => window.location.reload()}>
               Try again
             </button>
@@ -228,7 +289,9 @@ function App() {
             {filteredJobs.map((job) => (
               <article className="job-card" key={job._id}>
                 <p className="job-location">{job.location}</p>
+
                 <h3>{job.title}</h3>
+
                 <p className="job-description">{job.description}</p>
 
                 <p className="job-salary">{formatSalary(job.salary)}</p>
@@ -245,10 +308,34 @@ function App() {
                   type="button"
                   className="apply-button"
                   onClick={() => {
-                    window.location.hash = "login";
+                    setApplyMessage("");
+
+                    if (!user) {
+                      setAuthMode("login");
+                      return;
+                    }
+
+                    if (user.role !== "job seeker") {
+                      setApplyMessage("Only job seekers can apply for jobs.");
+                      return;
+                    }
+
+                    if (!accessToken) {
+                      setApplyMessage(
+                        "Your session has expired. Please log in again.",
+                      );
+                      setAuthMode("login");
+                      return;
+                    }
+
+                    setSelectedJob(job);
                   }}
                 >
-                  Login to apply
+                  {!user
+                    ? "Login to apply"
+                    : user.role === "employer"
+                      ? "Job seekers only"
+                      : "Apply Now"}
                 </button>
               </article>
             ))}
@@ -258,17 +345,25 @@ function App() {
 
       <section className="employer-section" id="employers">
         <p className="eyebrow">FOR EMPLOYERS</p>
+
         <h2>Find the right people for your team.</h2>
+
         <p>Create job listings and manage applications from one place.</p>
-        <a className="nav-button" href="#login">
+
+        <button
+          type="button"
+          className="nav-button"
+          onClick={() => setAuthMode("register")}
+        >
           Get started
-        </a>
+        </button>
       </section>
 
       <footer>
         <a className="brand" href="#">
           HireHub<span>.</span>
         </a>
+
         <p>Connecting talent with opportunity.</p>
       </footer>
     </main>

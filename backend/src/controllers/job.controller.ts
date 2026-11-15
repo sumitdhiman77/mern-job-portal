@@ -5,10 +5,11 @@ import {
   getJobById,
   updateJob,
   deleteJob,
+  getMyJobs
 } from "../services/job.service.js";
 import { AppError } from "../utils/AppError.js";
 import { getJobsQuerySchema } from "../validators/job.validator.js";
-import { success } from "zod";
+import { getMyJobsQuerySchema } from "../validators/job.validator.js";
 
 export const createJobController = async (
   req: Request,
@@ -85,3 +86,23 @@ export const deleteJobController = async (
     message: "Job deleted successfully",
   });
 };
+
+
+export const getMyJobsController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  if (!req.user) {
+    throw new AppError("Authentication required", 401);
+  }
+
+  const { page, limit } = getMyJobsQuerySchema.parse(req.query);
+
+  const result = await getMyJobs(req.user._id, page, limit);
+
+  res.status(200).json({
+    success: true,
+    ...result,
+  });
+};
+
