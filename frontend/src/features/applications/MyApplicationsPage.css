@@ -1,0 +1,144 @@
+.applications-page {
+  min-height: 100vh;
+  padding: 40px 7%;
+  background: #f8fafc;
+}
+
+.applications-header {
+  margin-bottom: 32px;
+}
+
+.applications-header > button {
+  margin-bottom: 28px;
+}
+
+.applications-header h1 {
+  margin: 8px 0;
+  font-size: 2rem;
+}
+
+.applications-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.applications-count {
+  margin-bottom: 20px;
+  color: #64748b;
+}
+
+.application-card {
+  padding: 24px;
+  margin-bottom: 20px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.application-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.application-card-header h2 {
+  margin: 0 0 6px;
+  font-size: 1.25rem;
+}
+
+.application-card-header p {
+  margin: 0;
+  color: #64748b;
+}
+
+.application-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-reviewed {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-shortlisted {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.status-selected {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.application-details p {
+  margin: 10px 0;
+  color: #475569;
+}
+
+.application-details a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.application-details a:hover {
+  text-decoration: underline;
+}
+
+.application-cover-letter {
+  padding-top: 16px;
+  margin-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.application-cover-letter p {
+  color: #475569;
+  white-space: pre-wrap;
+}
+
+.applications-empty {
+  padding: 40px 20px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.applications-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.applications-pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+  .applications-page {
+    padding: 24px 16px;
+  }
+
+  .application-card-header {
+    flex-direction: column;
+  }
+}
