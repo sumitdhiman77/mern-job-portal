@@ -30,14 +30,7 @@ export const createJobSchema = z.object({
     })
     .strict(),
 });
-export const getMyJobsQuerySchema = z.object({
-  page: z.coerce.number().int().positive().default(1),
-  limit: z.coerce.number().int().positive().max(50).default(10),
-});
 
-export const getMyJobsSchema = z.object({
-  query: getMyJobsQuerySchema,
-});
 export const getJobsQuerySchema = z.object({
   page: z.coerce.number().int().positive().default(1),
 
@@ -50,6 +43,15 @@ export const getJobsQuerySchema = z.object({
 
 export const getJobsSchema = z.object({
   query: getJobsQuerySchema,
+});
+
+export const getMyJobsQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(50).default(10),
+});
+
+export const getMyJobsSchema = z.object({
+  query: getMyJobsQuerySchema,
 });
 
 export const getJobByIdSchema = z.object({

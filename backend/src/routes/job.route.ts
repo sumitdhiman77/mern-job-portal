@@ -34,7 +34,7 @@ router.get(
   "/my",
   authenticate,
   authorize("employer"),
-  // validate(getMyJobsSchema),
+  validate(getMyJobsSchema),
   getMyJobsController,
 );
 
