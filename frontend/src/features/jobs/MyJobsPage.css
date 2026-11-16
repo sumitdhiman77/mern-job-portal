@@ -1,0 +1,141 @@
+
+.my-jobs-page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.my-jobs-header {
+  margin-bottom: 24px;
+}
+
+.my-jobs-header h1 {
+  margin: 0 0 8px;
+}
+
+.my-jobs-header p {
+  color: #666;
+  margin: 0;
+}
+
+.my-jobs-list {
+  display: grid;
+  gap: 18px;
+}
+
+.my-job-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.my-job-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.my-job-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.my-job-title-row h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.my-job-location {
+  color: #666;
+}
+
+.my-job-status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.my-job-status.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.my-job-status.inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.my-job-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.my-job-skills span {
+  padding: 5px 10px;
+  background: #f1f5f9;
+  border-radius: 5px;
+  font-size: 13px;
+}
+
+.my-job-actions button,
+.my-jobs-pagination button,
+.my-jobs-page > button {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+.my-jobs-pagination button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.my-jobs-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.my-jobs-empty,
+.my-jobs-message {
+  padding: 30px;
+  text-align: center;
+}
+
+.my-jobs-error {
+  color: #dc2626;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 600px) {
+  .my-jobs-page {
+    padding: 16px;
+  }
+
+  .my-job-card {
+    flex-direction: column;
+  }
+
+  .my-job-actions {
+    width: 100%;
+  }
+
+  .my-job-actions button {
+    width: 100%;
+  }
+}
