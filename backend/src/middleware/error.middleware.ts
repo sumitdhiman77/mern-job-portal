@@ -66,7 +66,16 @@ const errorHandler = (
     return;
   }
 
-  // 5. Unexpected errors
+  // Mongoose invalid ObjectId / cast errors 
+if (error.name === "CastError") {
+  res.status(400).json({
+    success: false,
+     message: "Invalid value provided in request",
+  });
+  return;
+}
+
+// 5. Unexpected errors
   console.error(error);
 
   res.status(500).json({

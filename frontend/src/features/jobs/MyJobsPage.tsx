@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { getMyJobs, type Job } from "./job.api";
 import "./MyJobsPage.css";
