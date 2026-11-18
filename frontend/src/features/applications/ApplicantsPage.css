@@ -1,0 +1,200 @@
+
+.applicants-page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.applicants-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.applicants-header h1 {
+  margin: 0 0 8px;
+}
+
+.applicants-header p {
+  margin: 0;
+  color: #666;
+}
+
+.applicants-back-button,
+.applicant-status-actions button,
+.applicants-pagination button,
+.applicants-error button {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+.applicants-list {
+  display: grid;
+  gap: 18px;
+}
+
+.applicant-card {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: white;
+}
+
+.applicant-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.applicant-heading h2 {
+  margin: 0 0 6px;
+}
+
+.applicant-heading p {
+  margin: 4px 0;
+  color: #666;
+}
+
+.application-status {
+  padding: 5px 11px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.application-status.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.application-status.reviewed {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.application-status.shortlisted {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.application-status.rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.application-status.selected {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.applicant-information {
+  margin-top: 18px;
+}
+
+.applicant-information a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.applicant-information a:hover {
+  text-decoration: underline;
+}
+
+.applicant-cover-letter {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 7px;
+  background: #f8fafc;
+}
+
+.applicant-cover-letter h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+
+.applicant-cover-letter p {
+  margin: 0;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.applicant-status-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.applicant-status-actions select {
+  padding: 9px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.applicant-status-actions button:disabled,
+.applicants-pagination button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.applicants-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.applicants-count {
+  margin-bottom: 18px;
+  color: #666;
+}
+
+.applicants-message,
+.applicants-empty {
+  padding: 30px;
+  text-align: center;
+}
+
+.applicants-success {
+  margin-bottom: 16px;
+  color: #166534;
+}
+
+.applicants-error {
+  margin-bottom: 18px;
+  color: #dc2626;
+}
+
+@media (max-width: 600px) {
+  .applicants-page {
+    padding: 16px;
+  }
+
+  .applicants-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .applicant-status-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .applicant-status-actions select,
+  .applicant-status-actions button {
+    width: 100%;
+  }
+}
