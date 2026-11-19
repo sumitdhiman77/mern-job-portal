@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/set-state-in-effect */
+import CreateJobPage from "./features/jobs/CreateJobPage";
 import MyJobsPage from "./features/jobs/MyJobsPage";
 import ApplyForm from "./features/applications/ApplyForm";
 import MyApplicationsPage from "./features/applications/MyApplicationsPage";
@@ -50,7 +51,7 @@ function formatSalary(salary?: Job["salary"]): string {
 function App() {
   const { user, accessToken, login, isAuthLoading, logout } = useAuth();
   const [currentPage, setCurrentPage] = useState<
-    "home" | "profile" | "applications" | "my-jobs" | "applicants"
+    "home" | "profile" | "applications" | "my-jobs" | "applicants"| "create-job"
   >("home");
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [authMode, setAuthMode] = useState<"login" | "register" | null>(null);
@@ -224,27 +225,34 @@ useEffect(() => {
       {user?.role === "employer" ? (
         !accessToken ? (
           <p>Your session has expired. Please log in again.</p>
-        ) : currentPage === "applicants" && selectedJobId ? (
-          <section className="my-jobs-page">
-            <ApplicantsPage
-  jobId={selectedJobId}
-  accessToken={accessToken}
-  onBack={() => {
-    setSelectedJobId(null);
-    setCurrentPage("my-jobs");
-  }}
-/>
-          </section>
-        ) : (
-          <MyJobsPage
-            accessToken={accessToken}
-            onViewApplicants={(jobId) => {
-              setSelectedJobId(jobId);
-              setCurrentPage("applicants");
-            }}
-          />
-        )
-      ) : (
+        ) : currentPage === "create-job" ? (
+    <CreateJobPage
+      accessToken={accessToken}
+      onBack={() => setCurrentPage("my-jobs")}
+      onSuccess={() => setCurrentPage("my-jobs")}
+    />
+  ) : currentPage === "applicants" && selectedJobId ? (
+    <section className="my-jobs-page">
+      <ApplicantsPage
+        jobId={selectedJobId}
+        accessToken={accessToken}
+        onBack={() => {
+          setSelectedJobId(null);
+          setCurrentPage("my-jobs");
+        }}
+      />
+    </section>
+  ) : (
+    <MyJobsPage
+      accessToken={accessToken}
+      onViewApplicants={(jobId) => {
+        setSelectedJobId(jobId);
+        setCurrentPage("applicants");
+      }}
+      onCreateJob={() => setCurrentPage("create-job")}
+    />
+  )
+)  : (
         <>
           {
             <section className="hero">

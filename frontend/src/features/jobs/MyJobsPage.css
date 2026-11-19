@@ -7,7 +7,27 @@
 }
 
 .my-jobs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
   margin-bottom: 24px;
+}
+
+.my-jobs-header > button {
+  padding: 11px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .my-jobs-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 
 .my-jobs-header h1 {

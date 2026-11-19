@@ -1,4 +1,3 @@
-
 import { apiRequest } from "../../lib/api";
 
 export type Job = {
@@ -39,6 +38,38 @@ export function getMyJobs(
   return apiRequest<MyJobsResponse>(
     `/jobs/my?page=${page}&limit=${limit}`,
     { method: "GET" },
+    accessToken,
+  );
+}
+
+export type CreateJobInput = {
+  title: string;
+  description: string;
+  salary: {
+    min: number;
+    max: number;
+  };
+  location: string;
+  requiredSkills: string[];
+  lastDate: string;
+};
+
+export type CreateJobResponse = {
+  success: boolean;
+  message: string;
+  job: Job;
+};
+
+export function createJob(
+  input: CreateJobInput,
+  accessToken: string,
+): Promise<CreateJobResponse> {
+  return apiRequest<CreateJobResponse>(
+    "/jobs",
+    {
+      method: "POST",
+      body: JSON.stringify(input),
+    },
     accessToken,
   );
 }

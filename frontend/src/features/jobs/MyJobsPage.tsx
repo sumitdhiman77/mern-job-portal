@@ -4,11 +4,13 @@ import "./MyJobsPage.css";
 type MyJobsPageProps = {
   accessToken: string;
   onViewApplicants: (jobId: string) => void;
+  onCreateJob: () => void;
 };
 
 export default function MyJobsPage({
   accessToken,
   onViewApplicants,
+  onCreateJob,
 }: MyJobsPageProps) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -95,12 +97,16 @@ export default function MyJobsPage({
 
   return (
     <section className="my-jobs-page">
-      <div className="my-jobs-header">
-        <div>
-          <h1>My Jobs</h1>
-          <p>Manage your job listings and review applicants.</p>
-        </div>
-      </div>
+     <div className="my-jobs-header">
+  <div>
+    <h1>My Jobs</h1>
+    <p>Manage your job listings and review applicants.</p>
+  </div>
+
+  <button type="button" onClick={onCreateJob}>
+    + Post a New Job
+  </button>
+</div>
 
       {jobs.length === 0 ? (
         <div className="my-jobs-empty">

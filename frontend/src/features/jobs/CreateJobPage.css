@@ -1,0 +1,126 @@
+
+.create-job-page {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.create-job-header {
+  margin-bottom: 24px;
+}
+
+.create-job-header h1 {
+  margin: 20px 0 8px;
+}
+
+.create-job-header p {
+  color: #666;
+}
+
+.create-job-back {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+}
+
+.create-job-form {
+  display: grid;
+  gap: 20px;
+  padding: 28px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.create-job-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.create-job-field label {
+  font-weight: 600;
+}
+
+.create-job-field input,
+.create-job-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  font: inherit;
+}
+
+.create-job-field textarea {
+  resize: vertical;
+}
+
+.create-job-field input:focus,
+.create-job-field textarea:focus {
+  outline: 2px solid #93c5fd;
+  border-color: #2563eb;
+}
+
+.create-job-field small {
+  color: #6b7280;
+}
+
+.create-job-salary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.create-job-error {
+  margin: 0;
+  color: #dc2626;
+}
+
+.create-job-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.create-job-actions button {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.create-job-actions button[type="submit"] {
+  background: #2563eb;
+  color: white;
+}
+
+.create-job-cancel {
+  background: #f1f5f9;
+  color: #1f2937;
+}
+
+.create-job-actions button:disabled,
+.create-job-back:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .create-job-page {
+    padding: 20px 16px;
+  }
+
+  .create-job-form {
+    padding: 18px;
+  }
+
+  .create-job-salary {
+    grid-template-columns: 1fr;
+  }
+}
