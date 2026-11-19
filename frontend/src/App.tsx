@@ -311,33 +311,6 @@ useEffect(() => {
                   </p>
                 )}
 
-                {selectedJob && accessToken && (
-  <div
-    className="modal-backdrop"
-    onClick={() => setSelectedJob(null)}
-  >
-    <div
-      className="modal-card"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <p className="eyebrow">APPLYING FOR</p>
-      <h2>{selectedJob.title}</h2>
-      <p className="job-location">{selectedJob.location}</p>
-
-      <ApplyForm
-        jobId={selectedJob._id}
-        accessToken={accessToken}
-        onSuccess={(message) => {
-          setSelectedJob(null);
-          setApplyMessage(message);
-        }}
-        onCancel={() => setSelectedJob(null)}
-      />
-    </div>
-  </div>
-)}
-
-
                 <span>
                   {loading
                     ? "Loading jobs…"
@@ -459,6 +432,32 @@ useEffect(() => {
 
         <p>Connecting talent with opportunity.</p>
       </footer>
+      {selectedJob && accessToken && (
+  <div
+    className="modal-backdrop"
+    onClick={() => setSelectedJob(null)}
+  >
+    <div
+      className="modal-card"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <p className="eyebrow">APPLYING FOR</p>
+      <h2>{selectedJob.title}</h2>
+      <p className="job-location">{selectedJob.location}</p>
+
+      <ApplyForm
+        jobId={selectedJob._id}
+        accessToken={accessToken}
+        onSuccess={(message) => {
+          setSelectedJob(null);
+          setApplyMessage(message);
+        }}
+        onCancel={() => setSelectedJob(null)}
+      />
+    </div>
+  </div>
+)}
+
     </main>
   );
 }
