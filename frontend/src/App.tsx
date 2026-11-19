@@ -312,16 +312,31 @@ useEffect(() => {
                 )}
 
                 {selectedJob && accessToken && (
-                  <ApplyForm
-                    jobId={selectedJob._id}
-                    accessToken={accessToken}
-                    onSuccess={(message) => {
-                      setApplyMessage(message);
-                      setSelectedJob(null);
-                    }}
-                    onCancel={() => setSelectedJob(null)}
-                  />
-                )}
+  <div
+    className="modal-backdrop"
+    onClick={() => setSelectedJob(null)}
+  >
+    <div
+      className="modal-card"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <p className="eyebrow">APPLYING FOR</p>
+      <h2>{selectedJob.title}</h2>
+      <p className="job-location">{selectedJob.location}</p>
+
+      <ApplyForm
+        jobId={selectedJob._id}
+        accessToken={accessToken}
+        onSuccess={(message) => {
+          setSelectedJob(null);
+          setApplyMessage(message);
+        }}
+        onCancel={() => setSelectedJob(null)}
+      />
+    </div>
+  </div>
+)}
+
 
                 <span>
                   {loading
@@ -449,3 +464,4 @@ useEffect(() => {
 }
 
 export default App;
+ 
