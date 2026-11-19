@@ -1,4 +1,5 @@
 import { useEffect, useState, type SyntheticEvent } from "react";
+import { useAuth } from "../auth/AuthContext";
 import {
   getMyProfile,
   uploadResume,
@@ -23,6 +24,7 @@ export default function ProfilePage({
   accessToken,
   onBack,
 }: ProfilePageProps) {
+  const {user}=useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [resume, setResume] = useState<Resume | null>(null);
@@ -135,7 +137,9 @@ export default function ProfilePage({
         <header className="profile-header">
           <p className="profile-eyebrow">ACCOUNT SETTINGS</p>
           <h1>My Profile</h1>
-          <p>Manage your profile and keep your resume up to date.</p>
+          {
+            user?.role === "job seeker" && <p>Manage your profile and keep your resume up to date.</p>
+          }
         </header>
 
         {error && (
@@ -166,7 +170,7 @@ export default function ProfilePage({
           </div>
         </section>
 
-        <section className="profile-card">
+{user?.role==="job seeker" &&   <section className="profile-card">
           <h2>My resume</h2>
 
           {resume ? (
@@ -228,7 +232,8 @@ export default function ProfilePage({
                   : "Upload resume"}
             </button>
           </form>
-        </section>
+        </section>}
+      
       </div>
     </main>
   );
